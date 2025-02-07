@@ -1,0 +1,14 @@
+services:
+  postgres-exporter:
+    image: bitnami/postgres-exporter:0.16.0
+    ports:
+      - ${EXPORTER_PORT}:9187
+    command:
+      - --collector.stat_statements
+    env_file:
+      - postgres_exporter.env
+    restart: always
+    logging:
+      options:
+        max-size: "1m"
+        max-file: "1"
