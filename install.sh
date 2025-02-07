@@ -25,18 +25,18 @@ function create_postgres_exporter_user() {
 function create_postgres_exporter_systemd_service() {
     echo "Creating postgres_exporter systemd service..."
     sudo tee /etc/systemd/system/postgres_exporter.service > /dev/null << EOF
-    [Unit]
-    Description=Prometheus Postgres Exporter
-    After=network.target
+[Unit]
+Description=Prometheus Postgres Exporter
+After=network.target
 
-    [Service]
-    User=postgres_exporter
-    Group=postgres_exporter
-    EnvironmentFile=/etc/postgres_exporter/postgres_exporter.env
-    ExecStart=/usr/local/bin/postgres_exporter --collector.stat_statements --web.listen-address=:$EXPORTER_PORT
+[Service]
+User=postgres_exporter
+Group=postgres_exporter
+EnvironmentFile=/etc/postgres_exporter/postgres_exporter.env
+ExecStart=/usr/local/bin/postgres_exporter --collector.stat_statements --web.listen-address=:$EXPORTER_PORT
 
-    [Install]
-    WantedBy=multi-user.target
+[Install]
+WantedBy=multi-user.target
 EOF
 }
 
