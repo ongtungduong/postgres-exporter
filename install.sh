@@ -1,7 +1,8 @@
 #!/bin/bash
 
+LATEST_VERSION=$(curl -s https://api.github.com/repos/prometheus-community/postgres_exporter/releases/latest | grep '"tag_name":' | sed -E 's/.*"v([^"]+)".*/\1/')
+EXPORTER_VERSION=${EXPORTER_VERSION:-$LATEST_VERSION}
 EXPORTER_PORT=${EXPORTER_PORT:-15432}
-EXPORTER_VERSION=${EXPORTER_VERSION:-0.16.0}
 
 function install_postgres_exporter() {
     echo "Downloading Postgres Exporter v${EXPORTER_VERSION}..."
