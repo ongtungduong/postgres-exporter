@@ -2,7 +2,7 @@ services:
   postgres-exporter:
     image: bitnami/postgres-exporter:0.16.0
     ports:
-      - ${EXPORTER_PORT}:9187
+      - ${POSTGRES_EXPORTER_PORT:-15432}:9187
     command:
       - --collector.stat_statements
     env_file:

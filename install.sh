@@ -1,8 +1,7 @@
 #!/bin/bash
 
-LATEST_VERSION=$(curl -s https://api.github.com/repos/prometheus-community/postgres_exporter/releases/latest | grep '"tag_name":' | sed -E 's/.*"v([^"]+)".*/\1/')
-EXPORTER_VERSION=${EXPORTER_VERSION:-$LATEST_VERSION}
-EXPORTER_PORT=${EXPORTER_PORT:-15432}
+EXPORTER_VERSION=$(curl -s https://api.github.com/repos/prometheus-community/postgres_exporter/releases/latest | grep '"tag_name":' | sed -E 's/.*"v([^"]+)".*/\1/')
+read -rp "Enter the port number for the Postgres Exporter (default: 15432): " -e -i "15432" POSTGRES_EXPORTER_PORT
 
 function install_postgres_exporter() {
     echo "Downloading Postgres Exporter v${EXPORTER_VERSION}..."
@@ -33,7 +32,7 @@ After=network.target
 User=postgres_exporter
 Group=postgres_exporter
 EnvironmentFile=/etc/postgres_exporter/postgres_exporter.env
-ExecStart=/usr/local/bin/postgres_exporter --collector.stat_statements --web.listen-address=:$EXPORTER_PORT
+ExecStart=/usr/local/bin/postgres_exporter --collector.stat_statements --web.listen-address=:$POSTGRES_EXPORTER_PORT
 
 [Install]
 WantedBy=multi-user.target
@@ -48,7 +47,7 @@ function enable_and_start_postgres_exporter_service() {
 
 function print_success_message() {
     echo "Postgres Exporter installed successfully!!!"
-    echo "You can now access the metrics at http://localhost:$EXPORTER_PORT/metrics"
+    echo "You can now access the metrics at http://localhost:$POSTGRES_EXPORTER_PORT/metrics"
 }
 
 install_postgres_exporter
