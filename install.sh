@@ -3,6 +3,11 @@
 EXPORTER_VERSION=$(curl -s https://api.github.com/repos/prometheus-community/postgres_exporter/releases/latest | grep '"tag_name":' | sed -E 's/.*"v([^"]+)".*/\1/')
 read -rp "Enter the port number for the Postgres Exporter (default: 15432): " -e -i "15432" POSTGRES_EXPORTER_PORT
 
+if lsof -i:$POSTGRES_EXPORTER_PORT > /dev/null 2>&1; then
+    echo "Port $POSTGRES_EXPORTER_PORT is already in use. Please choose another port."
+    exit 1
+fi
+
 function install_postgres_exporter() {
     echo "Downloading Postgres Exporter v${EXPORTER_VERSION}..."
     curl -LO "https://github.com/prometheus-community/postgres_exporter/releases/download/v${EXPORTER_VERSION}/postgres_exporter-${EXPORTER_VERSION}.linux-amd64.tar.gz"
